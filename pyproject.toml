@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "devint"
-version = "0.1.2"
+version = "0.2.5"
 description = "Unified Device Interface - A Python library for interacting with various hardware devices and protocols"
 authors = ["Tom Sapletta <info@softreck.dev>"]
 readme = "README.md"

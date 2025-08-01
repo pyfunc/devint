@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/devint)](https://pypi.org/project/devint/)
 [![Python Version](https://img.shields.io/pypi/pyversions/devint)](https://pypi.org/project/devint/)
-[![License](https://img.shields.io/pypi/l/devint)](https://github.com/softreck/devint/blob/main/LICENSE)
+[![License](https://img.shields.io/pypi/l/devint)](https://github.com/pyfunc/devint/blob/main/LICENSE)
 
 A Python library for interacting with various hardware devices and protocols through a unified interface.
 
@@ -30,7 +30,7 @@ pip install devint
 For development:
 
 ```bash
-git clone https://github.com/softreck/devint.git
+git clone https://github.com/pyfunc/devint.git
 cd devint
 poetry install
 ```
@@ -54,7 +54,7 @@ service.start()
 
 ## Documentation
 
-For full documentation, please visit [https://github.com/pyfunc/devint](https://github.com/softreck/devint)
+For full documentation, please visit [https://github.com/pyfunc/devint](https://github.com/pyfunc/devint)
 
 ## License
 
