@@ -33,8 +33,8 @@ app = Flask("modbus_rtu_web_demo")
 # Create a Blueprint to avoid route conflicts when running all examples together
 modbus_blueprint = Blueprint('modbus_web_demo', __name__, url_prefix='/modbus_demo')
 
-# Create a MultiDeviceService
-service = MultiDeviceService()
+# Don't create a MultiDeviceService to avoid endpoint conflicts
+# service = MultiDeviceService()
 
 # Create a ModbusRTUDevice in mock mode
 modbus_device = ModbusRTUDevice(

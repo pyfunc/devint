@@ -53,7 +53,6 @@ class MultiDeviceService(DeviceService):
         """Setup additional routes for multi-device operations"""
         
         # Root route with API documentation
-        @self.app.route('/')
         def root():
             """Root endpoint with API documentation"""
             return {
@@ -71,6 +70,9 @@ class MultiDeviceService(DeviceService):
                 },
                 'documentation': 'https://github.com/pyfunc/devint'
             }
+            
+        # Register the root route
+        self._register_route('/', 'root', root)
         
         # Define route handlers as instance methods
         def scan_devices():
