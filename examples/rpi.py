@@ -22,7 +22,7 @@ def main():
     # Add Waveshare IO 8CH (Serial/Modbus)
     io_module = WaveshareIO8CH(
         device_id='io_module_1',
-        port='/dev/ttyUSB0',
+        port='/dev/ttyACM0',
         unit_id=1,
         baudrate=9600
     )

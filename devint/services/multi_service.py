@@ -6,15 +6,52 @@ from flask import jsonify, request
 
 class MultiDeviceService(DeviceService):
     """Service handling multiple devices"""
+    
+    # Class-level set to track registered routes
+    _registered_routes = set()
+    _lock = threading.Lock()
 
     def __init__(self, name: str = "MultiDevice", port: int = 5000):
         super().__init__(name, port)
         self.device_manager = DeviceManager()
+        self.app = self.create_app()
+        self.setup_routes()
+        
+    def run(self, host: str = '0.0.0.0', port: int = None, debug: bool = False):
+        """Run the web service.
+        
+        Args:
+            host: Host to bind to (default: '0.0.0.0')
+            port: Port to listen on (default: self.port)
+            debug: Run in debug mode (default: False)
+        """
+        if port is None:
+            port = self.port
+            
+        self.logger.info(f"Starting {self.name} service on http://{host}:{port}")
+        self.logger.info("Press Ctrl+C to stop")
+        
+        try:
+            self.app.run(host=host, port=port, debug=debug)
+        except KeyboardInterrupt:
+            self.logger.info("Shutting down...")
+        except Exception as e:
+            self.logger.error(f"Error running service: {e}")
+            raise
+
+    def _register_route(self, rule, endpoint=None, view_func=None, **options):
+        """Helper to register a route only once"""
+        with self._lock:
+            if rule not in self._registered_routes:
+                self.app.add_url_rule(rule, endpoint, view_func, **options)
+                self._registered_routes.add(rule)
+                return True
+            return False
 
     def setup_routes(self):
         """Setup additional routes for multi-device operations"""
-
-        @self.app.route('/scan', methods=['POST'])
+        
+        # Define route handlers as instance methods
         def scan_devices():
             """Scan for devices on specified interfaces"""
             data = request.get_json()
@@ -29,8 +66,10 @@ class MultiDeviceService(DeviceService):
                 return self._scan_spi_devices()
 
             return jsonify({'error': 'Unknown interface type'}), 400
+            
+        # Register the route
+        self._register_route('/scan', 'scan_devices', scan_devices, methods=['POST'])
 
-        @self.app.route('/devices/batch', methods=['POST'])
         def batch_operation():
             """Perform batch operations on multiple devices"""
             data = request.get_json()
@@ -65,7 +104,6 @@ class MultiDeviceService(DeviceService):
 
             return jsonify({'results': results})
 
-        @self.app.route('/devices/<device_id>/parameters', methods=['GET', 'PUT'])
         def device_parameters(device_id):
             """Get or update device interface parameters"""
             device = self.devices.get(device_id)
@@ -94,6 +132,11 @@ class MultiDeviceService(DeviceService):
                     })
 
                 return jsonify({'error': 'Interface not found'}), 404
+                
+        # Register the remaining routes
+        self._register_route('/devices/batch', 'batch_operation', batch_operation, methods=['POST'])
+        self._register_route('/devices/<device_id>/parameters', 'device_parameters', 
+                           device_parameters, methods=['GET', 'PUT'])
 
     def _scan_i2c_devices(self):
         """Scan for I2C devices"""

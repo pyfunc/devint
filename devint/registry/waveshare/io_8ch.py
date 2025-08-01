@@ -1,9 +1,8 @@
 # devices/registry/waveshare/io_8ch.py
-from typing import List, Optional
+from typing import List, Optional, Any
 from devint.base import BaseDevice, DeviceIdentity, DeviceCapability
 from devint.base.register import BaseRegister, RegisterType
-from devint.interfaces.serial import SerialInterface
-from devint.protocols.modbus_rtu import ModbusRTUProtocol
+from devint.interfaces.serial import SerialInterface, InterfaceConfig
 
 
 class WaveshareIO8CH(BaseDevice):
@@ -15,14 +14,14 @@ class WaveshareIO8CH(BaseDevice):
             name=f"Waveshare IO 8CH (Unit {unit_id})"
         )
 
-        # Identyfikacja urządzenia
+        # Device identification
         self.identity = DeviceIdentity(
             manufacturer="Waveshare",
             model="Modbus RTU IO 8CH",
             firmware_version="1.0"
         )
 
-        # Konfiguracja interfejsu
+        # Interface configuration
         interface_config = InterfaceConfig(
             port=port,
             protocol="modbus_rtu",
@@ -36,10 +35,10 @@ class WaveshareIO8CH(BaseDevice):
             }
         )
 
-        # Dodaj interfejs
-        self.add_interface('primary', SerialInterface('primary', interface_config))
+        # Add interface
+        self.add_interface('primary', SerialInterface(interface_config))
 
-        # Zdefiniuj rejestry dla 8 wyjść
+        # Define registers for 8 outputs
         for i in range(8):
             self.add_register(BaseRegister(
                 name=f"output_{i}",
@@ -50,7 +49,7 @@ class WaveshareIO8CH(BaseDevice):
                 description=f"Digital Output Channel {i}"
             ))
 
-        # Zdefiniuj rejestry dla 8 wejść
+        # Define registers for 8 inputs
         for i in range(8):
             self.add_register(BaseRegister(
                 name=f"input_{i}",
@@ -61,7 +60,7 @@ class WaveshareIO8CH(BaseDevice):
                 description=f"Digital Input Channel {i}"
             ))
 
-        # Rejestry konfiguracji
+        # Configuration registers
         for i in range(8):
             self.add_register(BaseRegister(
                 name=f"output_mode_{i}",
@@ -69,10 +68,11 @@ class WaveshareIO8CH(BaseDevice):
                 register_type=RegisterType.HOLDING_REGISTER,
                 data_type="uint16",
                 access="rw",
-                description=f"Output Channel {i} Mode (0=Normal, 1=Linkage, 2=Toggle, 3=Edge)"
+                description=(f"Output Channel {i} Mode "
+                            "(0=Normal, 1=Linkage, 2=Toggle, 3=Edge)")
             ))
 
-        # Możliwości urządzenia
+        # Device capabilities
         self.capabilities = {
             'digital_outputs': DeviceCapability(
                 name="Digital Outputs",
@@ -95,7 +95,7 @@ class WaveshareIO8CH(BaseDevice):
         }
 
     def initialize(self) -> bool:
-        """Inicjalizacja urządzenia"""
+        """Initialize the device"""
         interface = self.interfaces.get('primary')
         if interface and interface.connect():
             self.is_online = True
@@ -103,7 +103,7 @@ class WaveshareIO8CH(BaseDevice):
         return False
 
     def read_register(self, register_name: str) -> Optional[Any]:
-        """Odczyt rejestru"""
+        """Read register value"""
         register = self.registers.get(register_name)
         interface = self.interfaces.get('primary')
 
@@ -116,7 +116,7 @@ class WaveshareIO8CH(BaseDevice):
         return None
 
     def write_register(self, register_name: str, value: Any) -> bool:
-        """Zapis do rejestru"""
+        """Write value to register"""
         register = self.registers.get(register_name)
         interface = self.interfaces.get('primary')
 
@@ -124,21 +124,22 @@ class WaveshareIO8CH(BaseDevice):
             return False
 
         encoded_value = register.encode(value)
-        return interface.write(register.address, encoded_value)
+        result = interface.write(register.address, encoded_value)
+        return bool(result)
 
-    # Metody wysokiego poziomu
+    # High-level methods
     def set_output(self, channel: int, state: bool) -> bool:
-        """Ustaw stan wyjścia"""
+        """Set output state"""
         return self.write_register(f"output_{channel}", state)
 
     def get_input(self, channel: int) -> Optional[bool]:
-        """Odczytaj stan wejścia"""
+        """Read input state"""
         return self.read_register(f"input_{channel}")
 
     def get_all_outputs(self) -> List[bool]:
-        """Odczytaj wszystkie wyjścia"""
+        """Read all outputs"""
         return [self.read_register(f"output_{i}") or False for i in range(8)]
 
     def get_all_inputs(self) -> List[bool]:
-        """Odczytaj wszystkie wejścia"""
+        """Read all inputs"""
         return [self.read_register(f"input_{i}") or False for i in range(8)]

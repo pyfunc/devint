@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 def main():
     """Test the Mock ModbusRTU protocol implementation."""
     # Default port (ignored in mock mode, but kept for API consistency)
-    port = '/dev/ttyUSB0'
+    port = '/dev/ttyACM0'
     
     # Check if a port was specified as a command-line argument
     if len(sys.argv) > 1:

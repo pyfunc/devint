@@ -25,7 +25,7 @@ class ModbusRTUDevice(BaseDevice):
                  device_id: str,
                  name: str = "ModbusRTU Device",
                  unit_id: int = 1,
-                 port: str = '/dev/ttyUSB0',
+                 port: str = '/dev/ttyACM0',
                  baudrate: int = None,
                  timeout: float = 1.0,
                  rs485_delay: float = 0.005,
@@ -44,7 +44,7 @@ class ModbusRTUDevice(BaseDevice):
             enable_state_tracking: Whether to enable device state tracking
             mock_mode: Whether to use mock mode (no physical hardware required)
         """
-        super().__init__(device_id)
+        super().__init__(device_id, name)
         
         self.unit_id = unit_id
         self.port = port
@@ -193,3 +193,114 @@ class ModbusRTUDevice(BaseDevice):
             return {'detected': False, 'error': 'Device not connected'}
         
         return self.protocol.auto_detect(baudrates, unit_ids)
+    
+    def read_register(self, register_name: str) -> Any:
+        """Read a register by name.
+        
+        This implementation maps register names to Modbus addresses and types.
+        Format for register_name: 'type_address' where type is one of:
+        - coil: for coils (read/write)
+        - discrete: for discrete inputs (read-only)
+        - holding: for holding registers (read/write)
+        - input: for input registers (read-only)
+        
+        Examples:
+        - 'coil_0': Read coil at address 0
+        - 'holding_100': Read holding register at address 100
+        """
+        if not self.connected:
+            logger.error(f"Device {self.device_id} not connected")
+            return None
+        
+        try:
+            # Parse register name to get type and address
+            parts = register_name.split('_')
+            if len(parts) != 2:
+                logger.error(f"Invalid register name format: {register_name}. Expected format: 'type_address'")
+                return None
+            
+            reg_type, address_str = parts
+            try:
+                address = int(address_str)
+                if address < 0:
+                    logger.error(f"Negative address not allowed: {register_name}")
+                    return None
+            except ValueError:
+                logger.error(f"Invalid address in register name: {register_name}")
+                return None
+            
+            # Read the appropriate register type
+            if reg_type == 'coil':
+                result = self.protocol.read_coils(self.unit_id, address, 1)
+                return result[0] if result else None
+            elif reg_type == 'discrete':
+                result = self.protocol.read_discrete_inputs(self.unit_id, address, 1)
+                return result[0] if result else None
+            elif reg_type == 'holding':
+                result = self.protocol.read_holding_registers(self.unit_id, address, 1)
+                return result[0] if result else None
+            elif reg_type == 'input':
+                result = self.protocol.read_input_registers(self.unit_id, address, 1)
+                return result[0] if result else None
+            else:
+                logger.error(f"Unknown register type: {reg_type}")
+                return None
+        except Exception as e:
+            logger.error(f"Error reading register {register_name}: {e}")
+            return None
+    
+    def write_register(self, register_name: str, value: Any) -> bool:
+        """Write to a register by name.
+        
+        This implementation maps register names to Modbus addresses and types.
+        Format for register_name: 'type_address' where type is one of:
+        - coil: for coils (read/write)
+        - holding: for holding registers (read/write)
+        
+        Examples:
+        - 'coil_0': Write to coil at address 0
+        - 'holding_100': Write to holding register at address 100
+        """
+        if not self.connected:
+            logger.error(f"Device {self.device_id} not connected")
+            return False
+        
+        try:
+            # Parse register name to get type and address
+            parts = register_name.split('_')
+            if len(parts) != 2:
+                logger.error(f"Invalid register name format: {register_name}. Expected format: 'type_address'")
+                return False
+            
+            reg_type, address_str = parts
+            try:
+                address = int(address_str)
+                if address < 0:
+                    logger.error(f"Negative address not allowed: {register_name}")
+                    return False
+            except ValueError:
+                logger.error(f"Invalid address in register name: {register_name}")
+                return False
+            
+            # Write to the appropriate register type
+            if reg_type == 'coil':
+                # Convert value to boolean
+                bool_value = bool(value)
+                return self.protocol.write_single_coil(self.unit_id, address, bool_value)
+            elif reg_type == 'holding':
+                # Ensure value is an integer
+                try:
+                    int_value = int(value)
+                    return self.protocol.write_single_register(self.unit_id, address, int_value)
+                except (ValueError, TypeError):
+                    logger.error(f"Invalid value for holding register: {value}. Must be convertible to int.")
+                    return False
+            elif reg_type in ['discrete', 'input']:
+                logger.error(f"Cannot write to read-only register type: {reg_type}")
+                return False
+            else:
+                logger.error(f"Unknown register type: {reg_type}")
+                return False
+        except Exception as e:
+            logger.error(f"Error writing to register {register_name}: {e}")
+            return False

@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # Create device
     device = WaveshareIO8CH(
         device_id='io8ch_1',
-        port='/dev/ttyUSB0',
+        port='/dev/ttyACM0',
         unit_id=1,
         baudrate=9600
     )

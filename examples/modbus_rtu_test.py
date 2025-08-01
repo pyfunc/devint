@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 def main():
     """Test the ModbusRTU protocol implementation."""
     # Default port for most USB-to-RS485 adapters
-    port = '/dev/ttyUSB0'
+    port = '/dev/ttyACM0'
     
     # Check if a port was specified as a command-line argument
     if len(sys.argv) > 1:

@@ -7,7 +7,7 @@ from devint.registry.waveshare.io_8ch import WaveshareIO8CH
 # Create device
 device = WaveshareIO8CH(
     device_id='dynamic_device',
-    port='/dev/ttyUSB0',
+    port='/dev/ttyACM0',
     unit_id=1,
     baudrate=9600
 )

@@ -10,7 +10,7 @@ class TestSerialInterface(unittest.TestCase):
 
     def setUp(self):
         self.config = InterfaceConfig(
-            port='/dev/ttyUSB0',
+            port='/dev/ttyACM0',
             protocol='modbus_rtu',
             parameters={
                 'baudrate': 9600,
@@ -32,7 +32,7 @@ class TestSerialInterface(unittest.TestCase):
         self.assertTrue(result)
         self.assertTrue(self.interface.is_connected)
         mock_serial.assert_called_once_with(
-            port='/dev/ttyUSB0',
+            port='/dev/ttyACM0',
             baudrate=9600,
             timeout=1.0,
             parity='N',

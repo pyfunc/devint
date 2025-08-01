@@ -27,7 +27,7 @@ class SerialInterface(BaseInterface):
         default_config = InterfaceConfig(
             name="serial",
             params={
-                "port": "/dev/ttyUSB0",
+                "port": "/dev/ttyACM0",
                 "baudrate": 9600,
                 "bytesize": 8,
                 "parity": "N",

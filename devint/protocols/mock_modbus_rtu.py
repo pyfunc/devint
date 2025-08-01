@@ -19,7 +19,7 @@ class MockModbusRTUProtocol:
     """
 
     def __init__(self, 
-                 port: str = '/dev/ttyUSB0', 
+                 port: str = '/dev/ttyACM0',
                  baudrate: int = None,
                  timeout: float = 1.0,
                  rs485_delay: float = 0.005,

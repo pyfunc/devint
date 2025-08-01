@@ -10,7 +10,7 @@ class TestWaveshareIO8CH(unittest.TestCase):
     def setUp(self):
         self.device = WaveshareIO8CH(
             device_id='test_io8ch',
-            port='/dev/ttyUSB0',
+            port='/dev/ttyACM0',
             unit_id=1,
             baudrate=9600
         )

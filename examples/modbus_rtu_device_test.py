@@ -34,8 +34,9 @@ def main():
     logger.info("Creating ModbusRTUDevice in mock mode")
     modbus_device = ModbusRTUDevice(
         device_id="modbus_rtu_1",
+        name="Modbus RTU Test Device",
         unit_id=1,
-        port="/dev/ttyUSB0",  # Ignored in mock mode
+        port="/dev/ttyACM0",  # Ignored in mock mode
         baudrate=9600,        # Ignored in mock mode
         mock_mode=True        # Use mock mode (no physical hardware required)
     )
@@ -49,35 +50,53 @@ def main():
     status = modbus_device.get_status()
     logger.info(f"Device status: {status}")
     
-    # Read some registers
-    logger.info("Reading holding registers")
+    # Read some registers using direct methods
+    logger.info("Reading holding registers using direct methods")
     registers = modbus_device.read_holding_registers(0, 10)
     logger.info(f"Holding registers: {registers}")
     
-    # Read some coils
-    logger.info("Reading coils")
+    # Read some coils using direct methods
+    logger.info("Reading coils using direct methods")
     coils = modbus_device.read_coils(0, 10)
     logger.info(f"Coils: {coils}")
     
-    # Write a register
-    logger.info("Writing value 12345 to holding register at address 5")
-    write_result = modbus_device.write_single_register(5, 12345)
+    # Test the BaseDevice register API
+    logger.info("Testing BaseDevice register API")
+    
+    # Read a coil using register API
+    logger.info("Reading coil at address 0 using register API")
+    coil_value = modbus_device.read_register("coil_0")
+    logger.info(f"Coil value: {coil_value}")
+    
+    # Read a holding register using register API
+    logger.info("Reading holding register at address 5 using register API")
+    register_value = modbus_device.read_register("holding_5")
+    logger.info(f"Register value: {register_value}")
+    
+    # Write to a coil using register API
+    logger.info("Writing to coil at address 1 using register API")
+    write_result = modbus_device.write_register("coil_1", True)
+    logger.info(f"Write result: {write_result}")
+    
+    # Read back the coil we just wrote
+    logger.info("Reading back coil at address 1")
+    coil_value = modbus_device.read_register("coil_1")
+    logger.info(f"Coil value: {coil_value}")
+    
+    # Write to a holding register using register API
+    logger.info("Writing value 12345 to holding register at address 5 using register API")
+    write_result = modbus_device.write_register("holding_5", 12345)
     logger.info(f"Write result: {write_result}")
     
     # Read back the register we just wrote
     logger.info("Reading back holding register at address 5")
-    register_value = modbus_device.read_holding_registers(5, 1)
+    register_value = modbus_device.read_register("holding_5")
     logger.info(f"Register value: {register_value}")
     
-    # Write multiple registers
-    logger.info("Writing values [100, 200, 300] to holding registers starting at address 10")
-    write_result = modbus_device.write_multiple_registers(10, [100, 200, 300])
-    logger.info(f"Write result: {write_result}")
-    
-    # Read back the registers we just wrote
-    logger.info("Reading back holding registers at addresses 10-12")
-    register_values = modbus_device.read_holding_registers(10, 3)
-    logger.info(f"Register values: {register_values}")
+    # Try to write to a read-only register (should fail)
+    logger.info("Trying to write to a read-only register (should fail)")
+    write_result = modbus_device.write_register("input_0", 100)
+    logger.info(f"Write result (should be False): {write_result}")
     
     # Dump device state
     logger.info("Dumping device state")

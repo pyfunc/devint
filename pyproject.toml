@@ -41,6 +41,7 @@ flask = "^2.3.3"
 paho-mqtt = "^2.0.0"
 requests = "^2.31.0"
 pyserial = "^3.5"
+modapi = "^0.2.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
