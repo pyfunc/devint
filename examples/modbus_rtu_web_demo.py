@@ -45,8 +45,8 @@ modbus_device = ModbusRTUDevice(
     mock_mode=True  # Use mock mode for demo
 )
 
-# Add device to service
-service.add_device(modbus_device)
+# No need to add device to service since we're not using MultiDeviceService
+# service.add_device(modbus_device)
 
 # HTML template for the web interface
 HTML_TEMPLATE = """
@@ -455,13 +455,14 @@ if __name__ == "__main__":
     # Run the Flask app
     try:
         # Use a different port to avoid conflicts with the main service
-        print(f"Starting Modbus RTU Web Demo on http://0.0.0.0:5001/")
+        print(f"Starting Modbus RTU Web Demo on http://0.0.0.0:5002/")
         print("Press Ctrl+C to stop")
-        app.run(host="0.0.0.0", port=5001, debug=True)
+        app.run(host="0.0.0.0", port=5002, debug=True)
     except KeyboardInterrupt:
         logger.info("Shutting down...")
     finally:
         logger.info("Shutting down device")
         modbus_device.shutdown()
-        logger.info("Removing device from service")
-        service.remove_device(modbus_device.device_id)
+        # No need to remove device from service since we're not using MultiDeviceService
+        # logger.info("Removing device from service")
+        # service.remove_device(modbus_device.device_id)
