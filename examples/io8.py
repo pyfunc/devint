@@ -2,8 +2,8 @@
 """
 Single device service example
 """
-from devices.registry.waveshare.io_8ch import WaveshareIO8CH
-from devices.base.service import DeviceService
+from devint.registry.waveshare.io_8ch import WaveshareIO8CH
+from devint.base.service import DeviceService
 
 
 class IO8CHService(DeviceService):

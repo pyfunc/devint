@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
-from devices.registry.waveshare.io_8ch import WaveshareIO8CH
-from devices.registry.raspberry_pi.sense_hat import RaspberrySenseHAT
+from devint.registry.waveshare.io_8ch import WaveshareIO8CH
+from devint.registry.raspberry_pi.sense_hat import RaspberrySenseHAT
 
 
 class TestWaveshareIO8CH(unittest.TestCase):

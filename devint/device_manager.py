@@ -1,7 +1,7 @@
 import json
 from typing import Dict, List, Optional, Type
 from pathlib import Path
-from devices.base import BaseDevice
+from devint.base.device import BaseDevice
 
 
 class DeviceManager:

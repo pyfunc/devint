@@ -1,9 +1,9 @@
 # devices/registry/waveshare/io_8ch.py
 from typing import List, Optional
-from devices.base import BaseDevice, DeviceIdentity, DeviceCapability
-from devices.base.register import BaseRegister, RegisterType
-from devices.interfaces.serial import SerialInterface
-from devices.protocols.modbus_rtu import ModbusRTUProtocol
+from devint.base import BaseDevice, DeviceIdentity, DeviceCapability
+from devint.base.register import BaseRegister, RegisterType
+from devint.interfaces.serial import SerialInterface
+from devint.protocols.modbus_rtu import ModbusRTUProtocol
 
 
 class WaveshareIO8CH(BaseDevice):

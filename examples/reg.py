@@ -2,7 +2,7 @@
 """
 Example of dynamic parameter changes
 """
-from devices.registry.waveshare.io_8ch import WaveshareIO8CH
+from devint.registry.waveshare.io_8ch import WaveshareIO8CH
 
 # Create device
 device = WaveshareIO8CH(

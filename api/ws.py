@@ -96,7 +96,7 @@ class WebSocketAPI:
 
             # Create device instance
             if device_type == 'auto_detect' or device_type == 'WaveshareIO8CH':
-                from devices.registry.waveshare import WaveshareIO8CH
+                from devint.registry.waveshare import WaveshareIO8CH
                 device = WaveshareIO8CH(
                     device_id=f"waveshare_{port.replace('/', '_')}_{unit_id}",
                     port=port,

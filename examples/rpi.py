@@ -2,10 +2,10 @@
 """
 Multi-device service for Raspberry Pi with various HATs and modules
 """
-from devices.services.multi_service import MultiDeviceService
-from devices.registry.waveshare.io_8ch import WaveshareIO8CH
-from devices.registry.raspberry_pi.sense_hat import RaspberrySenseHAT
-from devices.registry.waveshare.analog_8ch import WaveshareAnalog8CH
+from devint.services.multi_service import MultiDeviceService
+from devint.registry.waveshare.io_8ch import WaveshareIO8CH
+from devint.registry.raspberry_pi.sense_hat import RaspberrySenseHAT
+from devint.registry.waveshare.analog_8ch import WaveshareAnalog8CH
 
 
 def main():

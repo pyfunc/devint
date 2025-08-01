@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
-from devices.base.interface import InterfaceConfig
-from devices.interfaces.serial import SerialInterface
-from devices.interfaces.i2c import I2CInterface
+from devint.base.interface import InterfaceConfig
+from devint.interfaces.serial import SerialInterface
+from devint.interfaces.i2c import I2CInterface
 
 
 class TestSerialInterface(unittest.TestCase):

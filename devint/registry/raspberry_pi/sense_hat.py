@@ -1,8 +1,8 @@
 from typing import Dict, Optional, Tuple
-from devices.base import BaseDevice, DeviceIdentity, DeviceCapability
-from devices.base.register import BaseRegister, RegisterType
-from devices.interfaces.i2c import I2CInterface
-from devices.interfaces.spi import SPIInterface
+from devint.base import BaseDevice, DeviceIdentity, DeviceCapability
+from devint.base.register import BaseRegister, RegisterType
+from devint.interfaces.i2c import I2CInterface
+from devint.interfaces.spi import SPIInterface
 from sense_hat import SenseHat as SenseHatLib
 
 

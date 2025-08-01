@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
-from devices.base.service import DeviceService
-from devices.device_manager import DeviceManager
+from devint.base.service import DeviceService
+from devint.device_manager import DeviceManager
 from flask import jsonify, request
 
 
@@ -97,8 +97,8 @@ class MultiDeviceService(DeviceService):
 
     def _scan_i2c_devices(self):
         """Scan for I2C devices"""
-        from devices.interfaces.i2c import I2CInterface
-        from devices.base.interface import InterfaceConfig
+        from devint.interfaces.i2c import I2CInterface
+        from devint.base.interface import InterfaceConfig
 
         results = []
         for bus in [0, 1]:  # Scan common I2C buses

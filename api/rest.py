@@ -1,6 +1,6 @@
 # api/rest.py - rozszerzenie istniejącego API
-from devices.device_manager import DeviceManager
-from devices.registry.waveshare import WaveshareIO8CH
+from devint.device_manager import DeviceManager
+from devint.registry.waveshare import WaveshareIO8CH
 
 # Inicjalizacja managera urządzeń
 device_manager = DeviceManager()

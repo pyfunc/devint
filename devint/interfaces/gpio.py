@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 from typing import Optional, Dict, List, Union
-from devices.base.interface import BaseInterface, InterfaceConfig
+from devint.base.interface import BaseInterface, InterfaceConfig
 
 
 class GPIOInterface(BaseInterface):

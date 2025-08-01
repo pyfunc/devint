@@ -1,6 +1,6 @@
 import spidev
 from typing import Optional, List, Union
-from devices.base.interface import BaseInterface, InterfaceConfig
+from devint.base.interface import BaseInterface, InterfaceConfig
 
 
 class SPIInterface(BaseInterface):
