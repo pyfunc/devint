@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModAPI - Kontrola Urządzeń</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/devices.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Nagłówek -->
+        <header class="app-header">
+            <h1><i class="fas fa-microchip"></i> ModAPI Control Panel</h1>
+            <div class="connection-status">
+                <span id="ws-status" class="status-indicator offline">
+                    <i class="fas fa-circle"></i> Rozłączony
+                </span>
+            </div>
+        </header>
+
+        <!-- Pasek boczny -->
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a></li>
+                    <li><a href="#devices" class="nav-link">
+                        <i class="fas fa-server"></i> Urządzenia
+                    </a></li>
+                    <li><a href="#scan" class="nav-link">
+                        <i class="fas fa-search"></i> Skanuj
+                    </a></li>
+                    <li><a href="#logs" class="nav-link">
+                        <i class="fas fa-file-alt"></i> Logi
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Główna zawartość -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <section id="dashboard-view" class="view active">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-plug"></i></div>
+                        <div class="stat-content">
+                            <h3 id="devices-online">0</h3>
+                            <p>Urządzenia Online</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-toggle-on"></i></div>
+                        <div class="stat-content">
+                            <h3 id="outputs-active">0</h3>
+                            <p>Aktywne Wyjścia</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-signal"></i></div>
+                        <div class="stat-content">
+                            <h3 id="inputs-active">0</h3>
+                            <p>Aktywne Wejścia</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-content">
+                            <h3 id="errors-count">0</h3>
+                            <p>Błędy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista urządzeń -->
+                <div class="devices-container">
+                    <h3>Urządzenia</h3>
+                    <div id="devices-list" class="devices-grid">
+                        <!-- Dynamicznie generowane karty urządzeń -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Widok urządzenia -->
+            <section id="device-view" class="view">
+                <div class="device-header">
+                    <button class="btn-back" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i> Powrót
+                    </button>
+                    <h2 id="device-name">Urządzenie</h2>
+                </div>
+                
+                <div id="device-content">
+                    <!-- Dynamicznie generowana zawartość urządzenia -->
+                </div>
+            </section>
+
+            <!-- Skanowanie -->
+            <section id="scan-view" class="view">
+                <h2>Skanuj Urządzenia</h2>
+                <div class="scan-controls">
+                    <div class="form-group">
+                        <label>Porty:</label>
+                        <input type="text" id="scan-ports" placeholder="np. /dev/ttyACM0,/dev/ttyUSB0">
+                    </div>
+                    <div class="form-group">
+                        <label>Prędkości:</label>
+                        <input type="text" id="scan-baudrates" value="9600,19200,38400,115200">
+                    </div>
+                    <button class="btn btn-primary" onclick="startScan()">
+                        <i class="fas fa-search"></i> Rozpocznij skanowanie
+                    </button>
+                </div>
+                <div id="scan-results" class="scan-results">
+                    <!-- Wyniki skanowania -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/widgets.js"></script>
+    <script src="/static/js/devices.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

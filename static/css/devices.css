@@ -1,0 +1,228 @@
+/* Device Cards */
+.device-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.device-card.offline {
+    opacity: 0.6;
+}
+
+.device-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.device-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.device-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--danger-color);
+}
+
+.device-status.online {
+    background: var(--secondary-color);
+}
+
+.device-info {
+    display: grid;
+    gap: 10px;
+}
+
+.device-info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.device-info-label {
+    color: #666;
+}
+
+.device-info-value {
+    font-weight: 500;
+}
+
+/* Device Controls */
+.device-controls {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Digital I/O Widget */
+.io-widget {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.io-widget-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.io-widget-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.io-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+}
+
+.io-channel {
+    text-align: center;
+}
+
+.io-channel-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.io-channel-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.io-channel-button:hover {
+    transform: scale(1.1);
+}
+
+.io-channel-button.active {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.io-channel-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Analog Input Widget */
+.analog-widget {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.analog-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.analog-channel {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.analog-channel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.analog-channel-name {
+    font-weight: 600;
+}
+
+.analog-channel-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.analog-channel-unit {
+    font-size: 14px;
+    color: #666;
+    margin-left: 5px;
+}
+
+.analog-channel-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.analog-channel-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s;
+}
+
+/* Register Table */
+.register-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.register-table th,
+.register-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.register-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.register-table tr:hover {
+    background: #f9f9f9;
+}
+
+.register-value {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
+
+.register-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+}
