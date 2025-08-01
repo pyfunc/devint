@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Device Interface{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Device Dashboard</h1>
+    
+    <div class="stats-overview">
+        <div class="stat-card">
+            <h3>Total Devices</h3>
+            <p class="stat-value" id="total-devices">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Active Devices</h3>
+            <p class="stat-value" id="active-devices">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Alerts</h3>
+            <p class="stat-value" id="alerts-count">0</p>
+        </div>
+    </div>
+
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-list" id="activity-feed">
+            <!-- Activity items will be added by JavaScript -->
+            <div class="activity-item empty">
+                <p>No recent activity</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <button id="scan-devices" class="btn btn-primary">
+                <i class="icon-scan"></i> Scan for Devices
+            </button>
+            <button id="add-device" class="btn btn-secondary">
+                <i class="icon-add"></i> Add Device Manually
+            </button>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/widgets.js') }}"></script>
+<script>
+    // Initialize dashboard components
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize dashboard widgets
+        initDashboard();
+        
+        // Set up event listeners
+        document.getElementById('scan-devices').addEventListener('click', scanDevices);
+        document.getElementById('add-device').addEventListener('click', showAddDeviceModal);
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

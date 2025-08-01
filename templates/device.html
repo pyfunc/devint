@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}{{ device.name }} - Device Interface{% endblock %}
+
+{% block extra_css %}
+<style>
+    .device-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .device-meta {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+    
+    .register-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .register-card {
+        background: white;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .register-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="device-container">
+    <div class="device-header">
+        <h1>{{ device.name }}</h1>
+        <div class="device-status">
+            <span class="status-badge {% if device.is_online %}online{% else %}offline{% endif %}">
+                {% if device.is_online %}Online{% else %}Offline{% endif %}
+            </span>
+        </div>
+    </div>
+    
+    <div class="device-meta">
+        <div class="meta-grid">
+            <div class="meta-item">
+                <span class="meta-label">Device ID:</span>
+                <span class="meta-value">{{ device.device_id }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Manufacturer:</span>
+                <span class="meta-value">{{ device.identity.manufacturer }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Model:</span>
+                <span class="meta-value">{{ device.identity.model }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Hardware Version:</span>
+                <span class="meta-value">{{ device.identity.hardware_version }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="device-actions">
+        <h2>Device Actions</h2>
+        <div class="action-buttons">
+            <button id="refresh-device" class="btn btn-primary">
+                <i class="icon-refresh"></i> Refresh
+            </button>
+            <button id="edit-device" class="btn btn-secondary">
+                <i class="icon-edit"></i> Edit
+            </button>
+            <button id="remove-device" class="btn btn-danger">
+                <i class="icon-delete"></i> Remove
+            </button>
+        </div>
+    </div>
+    
+    <div class="device-registers">
+        <h2>Registers</h2>
+        <div class="register-grid" id="register-container">
+            {% for name, register in device.registers.items() %}
+            <div class="register-card" data-register="{{ name }}">
+                <h3>{{ register.name }}</h3>
+                <p class="register-description">{{ register.description }}</p>
+                <div class="register-value">
+                    <span class="value-label">Value:</span>
+                    <span class="value" id="value-{{ name }}">Loading...</span>
+                    <span class="value-unit">{{ register.unit }}</span>
+                </div>
+                {% if register.access in ['rw', 'write'] %}
+                <div class="register-actions">
+                    <input type="text" class="form-control" id="input-{{ name }}" placeholder="New value">
+                    <button class="btn btn-sm btn-primary" onclick="writeRegister('{{ name }}')">
+                        Write
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="device-logs">
+        <h2>Device Logs</h2>
+        <div class="log-container" id="device-logs">
+            <!-- Log entries will be added by JavaScript -->
+            <div class="log-entry empty">
+                <p>No log entries available</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    const deviceId = '{{ device.device_id }}';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize device page
+        loadDeviceData(deviceId);
+        
+        // Set up event listeners
+        document.getElementById('refresh-device').addEventListener('click', () => loadDeviceData(deviceId));
+        document.getElementById('edit-device').addEventListener('click', showEditDeviceModal);
+        document.getElementById('remove-device').addEventListener('click', confirmRemoveDevice);
+        
+        // Set up auto-refresh
+        setInterval(() => loadDeviceData(deviceId), 5000);
+    });
+    
+    function writeRegister(registerName) {
+        const value = document.getElementById(`input-${registerName}`).value;
+        if (!value) return;
+        
+        // Call API to write register value
+        fetch(`/api/devices/${deviceId}/registers/${registerName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ value: value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Register updated successfully', 'success');
+                loadDeviceData(deviceId);
+            } else {
+                showNotification('Failed to update register', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error updating register', 'error');
+        });
+    }
+</script>
+{% endblock %}
+
+{% endblock %}

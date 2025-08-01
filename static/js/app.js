@@ -1,6 +1,6 @@
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('ModAPI Web Interface initializing...');
+    console.log('devint Web Interface initializing...');
 
     // Initialize WebSocket connection
     window.wsManager.connect();

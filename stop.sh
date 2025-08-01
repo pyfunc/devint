@@ -23,7 +23,7 @@ done
 
 # Kill any Python processes that might be running our services
 echo "\n🔄 Cleaning up any remaining Python processes..."
-pkill -f "python.*(run_rtu_output|modapi|flask|gunicorn|rtu|tcp|rest|api)" 2>/dev/null
+pkill -f "python.*(run_rtu_output|devint|flask|gunicorn|rtu|tcp|rest|api)" 2>/dev/null
 
 # Double check for any remaining Python processes
 REMAINING=$(pgrep -f "python")

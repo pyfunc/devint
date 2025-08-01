@@ -127,7 +127,7 @@ class MultiDeviceService(DeviceService):
 
     def _scan_serial_devices(self, data):
         """Scan for serial/Modbus devices"""
-        from modapi import auto_detect_modbus_port
+        from devint import auto_detect_modbus_port
 
         ports = data.get('ports', [])
         baudrates = data.get('baudrates', [9600, 19200, 38400, 115200])

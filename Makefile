@@ -2,10 +2,10 @@
 
 # Default target
 help:
-	@echo "modapi Makefile (Poetry)"
+	@echo "DevInt Makefile (Poetry)"
 	@echo ""
 	@echo "Dostępne komendy:"
-	@echo "  make install    - Instalacja paczki modapi"
+	@echo "  make install    - Instalacja paczki DevInt"
 	@echo "  make dev        - Instalacja zależności developerskich"
 	@echo "  make test       - Uruchomienie testów jednostkowych"
 	@echo "  make lint       - Sprawdzenie kodu pod kątem błędów stylistycznych"
@@ -31,8 +31,8 @@ test:
 
 # Sprawdzenie kodu pod kątem błędów stylistycznych
 lint:
-	poetry run flake8 modapi/
-	poetry run pylint modapi/
+	poetry run flake8 devint/
+	poetry run pylint devint/
 
 # Usunięcie plików tymczasowych i artefaktów
 clean:
@@ -88,19 +88,19 @@ publish-test: check-version build
 	@echo "Publikowanie w TestPyPI..."
 	poetry publish --build -r testpypi
 	@echo "\nPaczka opublikowana w TestPyPI. Możesz ją zainstalować używając:"
-	@echo "pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple modapi"
+	@echo "pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple devint"
 
 # Uruchomienie serwera REST API
 run-rest:
-	python -m modapi.api
+	python -m devint.api
 
 # Uruchomienie serwera MQTT
 run-mqtt:
-	python -m modapi.mqtt
+	python -m devint.mqtt
 
 # Uruchomienie interfejsu CLI
 run-cli:
-	python -m modapi.shell
+	python -m devint.shell
 
 # Uruchomienie testów integracyjnych
 integration-test:
