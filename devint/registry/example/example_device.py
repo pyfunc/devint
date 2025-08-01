@@ -8,8 +8,8 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 
 from devint.base.device import BaseDevice
-from devint.base.interface import DeviceInterface, InterfaceConfig
-from devint.base.register import Register, RegisterType
+from devint.base.interface import BaseInterface, InterfaceConfig
+from devint.base.register import BaseRegister, RegisterType
 
 logger = logging.getLogger(__name__)
 
@@ -34,24 +34,62 @@ class ExampleDevice(BaseDevice):
     including digital and analog I/O operations.
     """
     
+    def initialize(self):
+        """Initialize the device and its resources."""
+        try:
+            logger.info(f"Initializing device {self.device_id} with config: {self.config}")
+            logger.info(f"Device registers: {list(self.registers.keys())}")
+            
+            # Initialize any required resources here
+            self._initialized = True
+            
+            logger.info(f"Successfully initialized {self.device_id} with {len(self.config.channels)} channels")
+            return True
+        except Exception as e:
+            logger.error(f"Error initializing device {self.device_id}: {e}", exc_info=True)
+            self._initialized = False
+            return False
+    
     def __init__(self, config: ExampleDeviceConfig):
         """Initialize the example device with the given configuration"""
-        super().__init__(config.device_id)
+        super().__init__(device_id=config.device_id, name=f"ExampleDevice-{config.device_id}")
         self.config = config
         self._channel_values = {name: 0 for name in config.channels}
         self._sample_rate = config.sample_rate
         self._resolution = 2 ** config.resolution_bits - 1
+        self._initialized = False
+        
+        # Set up device identity
+        self.identity.manufacturer = "Example Inc."
+        self.identity.model = "Example Device"
+        self.identity.firmware_version = "1.0.0"
+        self.identity.hardware_version = "1.0"
         
         # Set up registers for each channel
         self.registers = {}
         for name, chan_type in config.channels.items():
-            reg_type = RegisterType.READ_ONLY if 'IN' in chan_type.name else RegisterType.READ_WRITE
-            self.registers[name] = Register(
+            # Determine register type based on channel type
+            if 'IN' in chan_type.name:
+                reg_type = RegisterType.INPUT_REGISTER if 'ANALOG' in chan_type.name else RegisterType.DISCRETE_INPUT
+                access = 'r'  # Read-only for inputs
+            else:
+                reg_type = RegisterType.HOLDING_REGISTER if 'ANALOG' in chan_type.name else RegisterType.COIL
+                access = 'rw'  # Read-write for outputs
+                
+            # Calculate scale and offset based on resolution and expected range
+            max_val = self._resolution if 'ANALOG' in chan_type.name else 1
+            scale = 10.0 / max_val if 'ANALOG' in chan_type.name else 1.0
+            
+            self.registers[name] = BaseRegister(
                 name=name,
                 address=len(self.registers),
                 description=f"{chan_type.name} for channel {name}",
                 register_type=reg_type,
-                value_range=(0, self._resolution) if 'ANALOG' in chan_type.name else (0, 1)
+                data_type="float32" if 'ANALOG' in chan_type.name else "bool",
+                access=access,
+                unit="V" if 'ANALOG' in chan_type.name else None,
+                scale=scale,
+                offset=0.0
             )
     
     def read_register(self, register_name: str) -> Union[int, float]:
@@ -97,7 +135,7 @@ class ExampleDevice(BaseDevice):
         logger.info(f"Set {register_name} = {value}")
         return True
     
-    def get_registers(self) -> Dict[str, Register]:
+    def get_registers(self) -> Dict[str, BaseRegister]:
         """Get all registers for this device"""
         return self.registers
         

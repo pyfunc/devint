@@ -16,7 +16,9 @@ def main():
     device = create_example_device("example-1")
     
     # Add the device to the service
-    service.device_manager.add_device(device)
+    if not service.add_device(device):
+        print(f"Failed to add device {device.device_id} to the service")
+        return
     
     # Start the service in a background thread
     import threading

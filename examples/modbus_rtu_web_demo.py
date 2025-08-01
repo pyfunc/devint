@@ -11,7 +11,7 @@ This script creates a Flask web server that allows:
 
 import sys
 import logging
-from typing import Any, Union, cast
+from typing import Any, Dict, List, Optional, Tuple
 from flask import Flask, render_template_string, request, jsonify, Response, Blueprint
 
 # Add the project root to the Python path
@@ -285,12 +285,12 @@ HTML_TEMPLATE = """
 </html>
 """
 
-@modbus_blueprint.route('/')
+@modbus_blueprint.route('/') # type: ignore
 def index() -> str:
     """Render the main page."""
-    return cast(str, render_template_string(HTML_TEMPLATE, device=modbus_device))
+    return render_template_string(HTML_TEMPLATE, device=modbus_device)
 
-@modbus_blueprint.route('/api/read')
+@modbus_blueprint.route('/api/read') # type: ignore
 def read_register() -> Response:
     """API endpoint to read a register."""
     register_name = request.args.get('register', '')
@@ -306,7 +306,7 @@ def read_register() -> Response:
         logger.error(f"Error reading register: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
-@modbus_blueprint.route('/api/write', methods=['POST'])
+@modbus_blueprint.route('/api/write', methods=['POST']) # type: ignore
 def write_register() -> Response:
     """API endpoint to write to a register."""
     data = request.json
@@ -331,10 +331,14 @@ def write_register() -> Response:
                 value = False
             else:
                 try:
-                    value = int(value_str)
+                    # Use explicit typing to avoid type incompatibility
+                    int_value = int(value_str)
+                    value = int_value
                 except ValueError:
                     try:
-                        value = float(value_str)
+                        # Use explicit typing to avoid type incompatibility
+                        float_value = float(value_str)
+                        value = float_value
                     except ValueError:
                         value = value_str
         else:
@@ -348,7 +352,7 @@ def write_register() -> Response:
         logger.error(f"Error writing register: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
-@modbus_blueprint.route('/api/test/coil')
+@modbus_blueprint.route('/api/test/coil') # type: ignore
 def test_coil() -> Response:
     """Test coil read/write."""
     try:
@@ -370,7 +374,7 @@ def test_coil() -> Response:
             'error': str(e)
         })
 
-@modbus_blueprint.route('/api/test/holding')
+@modbus_blueprint.route('/api/test/holding') # type: ignore
 def test_holding() -> Response:
     """Test holding register read/write."""
     try:
@@ -394,7 +398,7 @@ def test_holding() -> Response:
             'error': str(e)
         })
 
-@modbus_blueprint.route('/api/test/input')
+@modbus_blueprint.route('/api/test/input') # type: ignore
 def test_input() -> Response:
     """Test input register read."""
     try:
@@ -412,7 +416,7 @@ def test_input() -> Response:
             'error': str(e)
         })
 
-@modbus_blueprint.route('/api/test/discrete')
+@modbus_blueprint.route('/api/test/discrete') # type: ignore
 def test_discrete() -> Response:
     """Test discrete input read."""
     try:
@@ -430,7 +434,7 @@ def test_discrete() -> Response:
             'error': str(e)
         })
 
-@modbus_blueprint.route('/api/state')
+@modbus_blueprint.route('/api/state') # type: ignore
 def get_state() -> Response:
     """Get device state."""
     try:

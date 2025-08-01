@@ -199,7 +199,7 @@ def run_edge_case_tests() -> None:
     # Create a ModbusRTUDevice in mock mode
     logger.info("Creating ModbusRTUDevice in mock mode")
     
-    modbus_device = ModbusRTUDevice(
+    modbus_device = ModbusRTUDevice(  # type: ignore
         device_id="modbus_rtu_edge_test",
         port="/dev/ttyACM0",
         baudrate=9600,
