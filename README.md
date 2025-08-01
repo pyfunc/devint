@@ -54,7 +54,7 @@ service.start()
 
 ## Documentation
 
-For full documentation, please visit [https://github.com/softreck/devint](https://github.com/softreck/devint)
+For full documentation, please visit [https://github.com/pyfunc/devint](https://github.com/softreck/devint)
 
 ## License
 

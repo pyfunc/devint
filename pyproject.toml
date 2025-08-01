@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "devint"
-version = "0.1.0"
+version = "0.1.2"
 description = "Unified Device Interface - A Python library for interacting with various hardware devices and protocols"
 authors = ["Tom Sapletta <info@softreck.dev>"]
 readme = "README.md"
@@ -26,9 +26,9 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-"Homepage" = "https://github.com/softreck/devint"
-"Documentation" = "https://github.com/softreck/devint#readme"
-"Bug Tracker" = "https://github.com/softreck/devint/issues"
+"Homepage" = "https://github.com/pyfunc/devint"
+"Documentation" = "https://github.com/pyfunc/devint#readme"
+"Bug Tracker" = "https://github.com/pyfunc/devint/issues"
 
 [tool.poetry.scripts]
 devint = "devint.__main__:main"
