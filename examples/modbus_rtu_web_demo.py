@@ -36,9 +36,6 @@ modbus_blueprint = Blueprint('modbus_web_demo', __name__, url_prefix='/modbus_de
 # Create a MultiDeviceService
 service = MultiDeviceService()
 
-# Register the blueprint with the Flask app
-app.register_blueprint(modbus_blueprint)
-
 # Create a ModbusRTUDevice in mock mode
 modbus_device = ModbusRTUDevice(
     device_id="modbus_rtu_web_demo",
@@ -451,12 +448,16 @@ def get_state() -> Response:
             'error': str(e)
         })
 
+# Register the blueprint with the Flask app after all routes are defined
+app.register_blueprint(modbus_blueprint)
+
 if __name__ == "__main__":
     # Run the Flask app
     try:
-        print(f"Starting Modbus RTU Web Demo on http://0.0.0.0:5000/modbus_demo/")
+        # Use a different port to avoid conflicts with the main service
+        print(f"Starting Modbus RTU Web Demo on http://0.0.0.0:5001/")
         print("Press Ctrl+C to stop")
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=5001, debug=True)
     except KeyboardInterrupt:
         logger.info("Shutting down...")
     finally:

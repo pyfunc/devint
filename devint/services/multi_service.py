@@ -1,3 +1,4 @@
+import threading
 from typing import Dict, List, Optional
 from devint.base.service import DeviceService
 from devint.device_manager import DeviceManager
@@ -51,6 +52,26 @@ class MultiDeviceService(DeviceService):
     def setup_routes(self):
         """Setup additional routes for multi-device operations"""
         
+        # Root route with API documentation
+        @self.app.route('/')
+        def root():
+            """Root endpoint with API documentation"""
+            return {
+                'service': 'DevInt Device Manager',
+                'version': '0.1.0',
+                'endpoints': {
+                    '/': 'This documentation',
+                    '/health': 'Get service health status',
+                    '/devices': 'List all registered devices',
+                    '/devices/<device_id>': 'Get device details',
+                    '/devices/<device_id>/registers/<register_name>': 'Read/write device register',
+                    '/devices/<device_id>/parameters': 'Get/update device parameters',
+                    '/scan': 'Scan for devices (POST)',
+                    '/devices/batch': 'Batch operations on multiple devices (POST)'
+                },
+                'documentation': 'https://github.com/pyfunc/devint'
+            }
+        
         # Define route handlers as instance methods
         def scan_devices():
             """Scan for devices on specified interfaces"""
@@ -67,8 +88,8 @@ class MultiDeviceService(DeviceService):
 
             return jsonify({'error': 'Unknown interface type'}), 400
             
-        # Register the route
-        self._register_route('/scan', 'scan_devices', scan_devices, methods=['POST'])
+        # Register the route with a unique endpoint name to avoid conflicts
+        self._register_route('/scan', f'scan_devices_{self.name}', scan_devices, methods=['POST'])
 
         def batch_operation():
             """Perform batch operations on multiple devices"""
